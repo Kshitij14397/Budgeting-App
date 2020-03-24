@@ -222,6 +222,15 @@ var uiController=(function(){
             
             return (type === 'exp' ? '-' : '+')+' '+int+'.'+dec;
         };
+    
+    var nodeListForEach=function(list,callback)
+            {
+               for(var i=0;i<list.length;i++)
+                   {
+                       callback(list[i],i);
+                   }
+            };
+            
         
     return{
       getInput:function(){
@@ -302,14 +311,6 @@ html='<div class="item clearfix" id="exp-%id%"><div class="item__description">%d
         {
            var fields=document.querySelectorAll(domStrings.expensesPercLabel);
             
-            var nodeListForEach=function(list,callback)
-            {
-               for(var i=0;i<list.length;i++)
-                   {
-                       callback(list[i],i);
-                   }
-            };
-            
             nodeListForEach(fields,function(current,index){
                 
                 if(percentages[index]>0)
@@ -336,6 +337,20 @@ html='<div class="item clearfix" id="exp-%id%"><div class="item__description">%d
             year=now.getFullYear();
             document.querySelector(domStrings.dateLabel).textContent=months[month]+' '+year;
         },
+        
+        
+        changedType: function()
+        {
+var
+fields=document.querySelectorAll(domStrings.inputType+','+domStrings.inputDescription+','+domStrings.inputValue);
+            
+            nodeListForEach(fields,function(cur)
+                           {
+               cur.classList.toggle('red-focus'); 
+            });
+            
+            document.querySelector(domStrings.inputBtn).classList.toggle('red');
+    },
         
         getDomStrings: function()
     {
@@ -366,9 +381,13 @@ var controller=(function(budgetCtrl,uiCtrl)
              {
                  ctrlAddItem();
              }
+        
+        
     }); 
         
         document.querySelector(dom.container).addEventListener('click',ctrlDeleteItem);
+        
+        document.querySelector(dom.inputType).addEventListener('change',uiCtrl.changedType);
     };
         
     var updateBudget=function()
